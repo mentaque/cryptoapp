@@ -1,0 +1,14 @@
+{% extends 'cryptodata/base.html' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+<div class="container login">
+<h2>Register</h2>
+<form method="post" class="login-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+</div>
+{% endblock %}

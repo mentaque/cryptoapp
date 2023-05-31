@@ -1,0 +1,58 @@
+{% extends 'cryptodata/base.html' %}
+{% block title %}Crypto list{% endblock %}
+{% block content %}
+<div class="container list">
+    <div class="crypto-container">
+        <div class="search">
+            <form method="GET" action="{% url 'crypto_list' %}">
+                <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search by symbol or name">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Name</th>
+                  <th>Current Price</th>
+                  <th>Change (24h)%</th>
+                  <th>Trade Volume</th>
+                  <th>VWAP (24h)</th>
+                  <th>Last Updated(UTC+3)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cryptocurrency in cryptocurrencies %}
+                  <tr>
+                    <td>{{ cryptocurrency.symbol }}</td>
+                    <td>{{ cryptocurrency.name }}</td>
+                    <td>{{ cryptocurrency.current_price }}</td>
+                    <td style="color: {% if cryptocurrency.change_24h > 0 %}green{% else %}red{% endif %}">
+                        {{ cryptocurrency.change_24h }}%
+                    </td>
+                    <td>{{ cryptocurrency.trade_volume }}</td>
+                    <td>{{ cryptocurrency.vwap_24h }}</td>
+                    <td>{{ cryptocurrency.last_updated }}</td>
+                    <td>
+                    <form method="POST" action="{% url 'crypto_list' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="crypto_symbol" value="{{ cryptocurrency.symbol }}">
+                            {% if cryptocurrency.name in favorite_currencies %}
+                            <button type="submit" class="btn btn-danger favorite-button">Remove from favorite</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-success favorite-button">Add to favorite</button>
+                            {% endif %}
+                    </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="favorites">
+
+    </div>
+</div>
+{% endblock %}
