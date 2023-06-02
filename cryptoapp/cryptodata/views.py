@@ -51,19 +51,29 @@ def crypto_list(request):
         crypto.vwap_24h = item['vwap_24h']
         crypto.save()
 
-    user_favorites = UserFavorite.objects.filter(user=request.user).values_list('crypto__name', flat=True)
+    user_favorite = UserFavorite.objects.filter(user=request.user).values_list('crypto__name', flat=True)
 
     if filtered_data == formatted_data:
-        cryptocurrencies = CryptoCurrency.objects.all().order_by('-userfavorite__id')
+        user_favorites = UserFavorite.objects.filter(user=request.user)
+        favorite_currencies = [favorite.crypto for favorite in user_favorites]
+        other_currencies = CryptoCurrency.objects.exclude(pk__in=[currency.pk for currency in favorite_currencies])
+        cryptocurrencies = list(favorite_currencies) + list(other_currencies)
     else:
-        cryptocurrencies = CryptoCurrency.objects.filter(
+        user_favorites = UserFavorite.objects.filter(user=request.user)
+        favorite_currencies = [favorite.crypto for favorite in user_favorites]
+        favorite_search_results = CryptoCurrency.objects.filter(
+            Q(name__icontains=search_query) | Q(symbol__icontains=search_query),
+            pk__in=[crypto.pk for crypto in favorite_currencies]
+        )
+        other_search_results = CryptoCurrency.objects.filter(
             Q(name__icontains=search_query) | Q(symbol__icontains=search_query)
-        ).order_by('-userfavorite__id').distinct()
+        ).exclude(pk__in=[crypto.pk for crypto in favorite_currencies])
+        cryptocurrencies = list(favorite_search_results) + list(other_search_results)
 
     if request.method == 'POST':
         crypto_symbol = request.POST.get('crypto_symbol')
         crypto = CryptoCurrency.objects.get(symbol=crypto_symbol)
-        is_favorite = crypto.name in user_favorites
+        is_favorite = crypto.name in user_favorite
         if is_favorite:
             UserFavorite.objects.filter(user=request.user, crypto=crypto).delete()
         else:
@@ -73,7 +83,7 @@ def crypto_list(request):
     context = {
         'cryptocurrencies': cryptocurrencies,
         'search_query': search_query,
-        'favorite_currencies': user_favorites,
+        'favorite_currencies': user_favorite,
     }
     return render(request, 'cryptodata/crypto_list.html', context)
 
