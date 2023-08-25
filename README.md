@@ -1,5 +1,4 @@
 # Небольшой petproject 
-https://mentaque.pythonanywhere.com/ - размещено на бесплатном хостинге
 
 ## API
 Создано REST API с помощью DRF релизованы методы:
