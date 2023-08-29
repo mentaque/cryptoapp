@@ -1,13 +1,15 @@
-# Небольшой petproject 
+# Pet-project cryptoapp
+Pet-project using Django, DRF, APIs for cryptocurrencies and crypto-news. 
+## Technologies
+- Django
+- DRF
+- SQLite
+- Celery
+## Features
+- Getting data from APIs for currencies and news
+- Django templates
+- Simple authentication
+- Endpoints for CRUD operations with cryptocurrencies
+- Adding crypto to your favorite
 
-## API
-Создано REST API с помощью DRF релизованы методы:
-● Получение списка всех криптовалют; 
-● Получение информации о конкретной криптовалюте по 
-символьному коду; 
-● Добавление новой криптовалюты; 
-● Обновление информации о криптовалюте; 
-● Удаление криптовалюты;
-Написаны unittestы в файле test_api.py
-
-## Мой tg: https://t.me/topincash
+## https://t.me/topincash
