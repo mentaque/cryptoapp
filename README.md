@@ -5,6 +5,7 @@ Pet-project using Django, DRF, APIs for cryptocurrencies and crypto-news.
 - DRF
 - SQLite
 - Celery
+- Pytest
 ## Features
 - Getting data from APIs for currencies and news
 - Django templates
